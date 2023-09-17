@@ -14,7 +14,7 @@ export default function UserForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('api/create', formData);
+      const response = await axios.post('api/webhook', formData);
       console.log('Response from server:', response.data);
     } catch (error) {
       console.error('Error:', error);
