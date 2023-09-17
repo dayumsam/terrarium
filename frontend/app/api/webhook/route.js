@@ -16,6 +16,9 @@ export async function POST(NextRequest) {
         const strength = Math.trunc(Number((data.measurements_data.measurements[0].lean_mass_g + data.measurements_data.measurements[0].muscle_mass_g) / 2))
         const endurance = Math.trunc(Number((100 - data.measurements_data.measurements[0].bodyfat_percentage) + (data.measurements_data.measurements[0].water_percentage - 50)))
         const stamina = Math.trunc(Number((data.measurements_data.measurements[0].muscle_mass_g + data.measurements_data.measurements[0].lean_mass_g) / 2 + (90 - data.measurements_data.measurements[0].estimated_fitness_age)))
+        const rest = 100
+        const energy = 100
+
 
         await setDoc(doc(db, "pets", uid),
             {
@@ -26,6 +29,8 @@ export async function POST(NextRequest) {
                 strength: strength,
                 endurance: endurance,
                 stamina: stamina,
+                rest: rest,
+                energy: energy,
             });
     }
 
@@ -62,31 +67,6 @@ export async function POST(NextRequest) {
     else if ((body.type === "activity")) {
         updateStats(body.data[0], body.user.user_id);
     }
-    // lvl = (round((pow(x, 3))20))
-    // strength = round(strength 1.05)
-    // endurance = round(endurance * 1.025)
-
-    // response = body
-
-    //   try {
-    //     const options = {
-    //       method: 'POST',
-    //       url: 'https://tldrthis.p.rapidapi.com/v1/model/extractive/summarize-url/',
-    //       headers: {
-    //         'content-type': 'application/json',
-    //         'X-RapidAPI-Key': process.env.RAPIDAPI,
-    //         'X-RapidAPI-Host': 'tldrthis.p.rapidapi.com'
-    //       },
-    //       data: `{"url":"${body['url']}","num_sentences":10,"is_detailed":true}`
-    //     };
-
-    //     const { data, error } = await axios.request(options)
-    //     const response = data
-
-    //     if (error) throw new Error(error)
 
     return NextResponse.json({ body }, { status: 200 })
-    // } catch (error) {
-    //     return NextResponse.json({ error: error.message }, { status: 500 })
-    // }
 }
