@@ -1,21 +1,20 @@
-"use client"
-
 import { NextResponse } from 'next/server'
 
-import { useAuthContext } from './context/AuthContext';
+import { db } from '@/firebase/config';
+import { collection, getDocs, updateDoc } from 'firebase/firestore';
 
-export async function POST(NextRequest) {
-    const { user } = useAuthContext()
+export async function POST(request) {
 
-    const docRef = doc(db, "pets", user.uid)
-    const docSnap = await getDoc(docRef);
+    const querySnapshot = await getDocs(collection(db, "pets"));
+    querySnapshot.forEach((doc) => {
+        console.log(doc.data())
 
-    const currentStats = docSnap.data()
+        const currentStats = doc.data()
+        currentStats['rest'] -= Math.round(Number(Math.random() * 10))
+        currentStats['energy'] -= Math.round(Number(Math.random() * 10))
 
-    currentStats['sleep'] -= Math.round(Number(Math.random() * 10))
-    currentStats['energy'] -= Math.round(Number(Math.random() * 10))
+        updateDoc(doc.ref, currentStats);
+    });
 
-    updateDoc(docRef, currentStats);
-
-    return NextResponse.json({ status: 200 })
+    return { status: 200 }
 }
