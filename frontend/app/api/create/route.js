@@ -5,7 +5,7 @@ export async function POST(NextRequest) {
     const axios = require("axios");
     const body = await NextRequest.json()
 
-    response = body
+    // response = body
 
     //   try {
     //     const options = {
@@ -24,8 +24,8 @@ export async function POST(NextRequest) {
 
     //     if (error) throw new Error(error)
 
-    return NextResponse.json({ response }, { status: 200 })
-} catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
-}
+    return NextResponse.json({ body }, { status: 200 })
+// } catch (error) {
+//     return NextResponse.json({ error: error.message }, { status: 500 })
+// }
 }
