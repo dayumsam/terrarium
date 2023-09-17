@@ -41,6 +41,7 @@ export async function POST(NextRequest) {
         const currentStats = docSnap.data()
 
         const calories = Math.trunc(Number(data.calories_data.net_activity_calories))
+        currentStats['energy'] = Math.min(Math.round(currentStats['energy'] + (calories * 0.1)), 100)
 
         if ((currentStats['xp'] + calories) >= Math.round(Math.pow(currentStats['level'], 3) * 20)) {
             currentStats['strength'] = Math.round(currentStats['strength'] * 1.0080) + 3
@@ -66,6 +67,18 @@ export async function POST(NextRequest) {
 
     else if ((body.type === "activity")) {
         updateStats(body.data[0], body.user.user_id);
+    }
+
+    else if ((body.type === "sleep")) {
+        const docRef = doc(db, "pets", body.user.user_id)
+        const docSnap = await getDoc(docRef);
+
+        const currentStats = docSnap.data()
+        const rest_amount = Math.min(Math.round(Math.log2(Math.pow((body.data[0].sleep_durations_data.sleep_efficiency), 2))) + 60, 100)
+
+        currentStats['rest'] += rest_amount
+
+        updateDoc(docRef, currentStats);
     }
 
     return NextResponse.json({ body }, { status: 200 })

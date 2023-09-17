@@ -1,20 +1,18 @@
 'use client'
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
+
 export default function UserForm() {
   const [formData, setFormData] = useState({});
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    setFormData(e.target.value);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(JSON.parse(formData))
     try {
-      const response = await axios.post('api/webhook', formData);
+      const response = await axios.post('/api/webhook', formData);
       console.log('Response from server:', response.data);
     } catch (error) {
       console.error('Error:', error);

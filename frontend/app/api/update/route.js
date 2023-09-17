@@ -1,39 +1,21 @@
+"use client"
+
 import { NextResponse } from 'next/server'
 
+import { useAuthContext } from './context/AuthContext';
+
 export async function POST(NextRequest) {
+    const { user } = useAuthContext()
 
-    const axios = require("axios");
-    const body = await NextRequest.json()
+    const docRef = doc(db, "pets", user.uid)
+    const docSnap = await getDoc(docRef);
 
-    console.log(body.data[0].calories_data)
+    const currentStats = docSnap.data()
 
-    const xp = Math.round(body?.data[0].calories_data.net_activity_calories)
+    currentStats['sleep'] -= Math.round(Number(Math.random() * 10))
+    currentStats['energy'] -= Math.round(Number(Math.random() * 10))
 
-    lvl = (round((pow(x, 3))20))
-    strength = round(strength 1.05)
-    endurance = round(endurance * 1.025)
+    updateDoc(docRef, currentStats);
 
-    // response = body
-
-    //   try {
-    //     const options = {
-    //       method: 'POST',
-    //       url: 'https://tldrthis.p.rapidapi.com/v1/model/extractive/summarize-url/',
-    //       headers: {
-    //         'content-type': 'application/json',
-    //         'X-RapidAPI-Key': process.env.RAPIDAPI,
-    //         'X-RapidAPI-Host': 'tldrthis.p.rapidapi.com'
-    //       },
-    //       data: `{"url":"${body['url']}","num_sentences":10,"is_detailed":true}`
-    //     };
-
-    //     const { data, error } = await axios.request(options)
-    //     const response = data
-
-    //     if (error) throw new Error(error)
-
-    return NextResponse.json({ body }, { status: 200 })
-    // } catch (error) {
-    //     return NextResponse.json({ error: error.message }, { status: 500 })
-    // }
+    return NextResponse.json({ status: 200 })
 }

@@ -15,7 +15,9 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <AuthContextProvider>
-          {children}
+          <div className='grid items-center h-[100vh]'>
+            {children}
+          </div>
         </AuthContextProvider>
       </body>
     </html>
